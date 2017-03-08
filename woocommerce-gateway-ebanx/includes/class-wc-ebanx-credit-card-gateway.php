@@ -221,7 +221,6 @@ abstract class WC_EBANX_Credit_Card_Gateway extends WC_EBANX_Gateway
 				}
 			}
 
-			// TODO: Implement token due date
 			if (isset($card)) {
 				$cards[] = $card;
 			}
@@ -235,12 +234,8 @@ abstract class WC_EBANX_Credit_Card_Gateway extends WC_EBANX_Gateway
 		if ( isset( $_POST['ebanx_billing_instalments'] ) ) {
 			$order = wc_get_order( $order_id );
 			$total_price = $order->get_total();
-			$tax_rate = 0;
 			$instalments = $_POST['ebanx_billing_instalments'];
-			if ( array_key_exists( $instalments, $this->instalment_rates ) ) {
-				$tax_rate = $this->instalment_rates[$instalments];
-			}
-			$total_price += $total_price * $tax_rate;
+
 			$order->set_total($total_price);
 		}
 		return parent::process_payment($order_id);
