@@ -319,7 +319,7 @@ final class WC_EBANX_Global_Gateway extends WC_Payment_Gateway
 				'type' => 'text',
 				'class' => 'ebanx-advanced-option ebanx-checkout-manager-field always-visible',
 				'placeholder' => __('eg: billing_chile_birth_date', 'woocommerce-gateway-ebanx')
-			),
+			)
 		);
 
 		$this->inject_defaults();
