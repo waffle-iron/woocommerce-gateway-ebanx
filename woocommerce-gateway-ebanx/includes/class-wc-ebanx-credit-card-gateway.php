@@ -231,13 +231,14 @@ abstract class WC_EBANX_Credit_Card_Gateway extends WC_EBANX_Gateway
 
 	public function process_payment($order_id)
 	{
-		if ( isset( $_POST['ebanx_billing_instalments'] ) ) {
-			$order = wc_get_order( $order_id );
-			$total_price = $order->get_total();
-			$instalments = $_POST['ebanx_billing_instalments'];
+		$order = wc_get_order( $order_id );
+		$instalments = 1;
 
-			$order->set_total($total_price);
+		if ( isset( $_POST['ebanx_billing_instalments'] ) ) {
+			$instalments = $_POST['ebanx_billing_instalments'];
 		}
+
+		$order->set_total(WC_VPD_XML_Interest_Calculator::calculate_total($order, $instalments));
 		return parent::process_payment($order_id);
 	}
 
