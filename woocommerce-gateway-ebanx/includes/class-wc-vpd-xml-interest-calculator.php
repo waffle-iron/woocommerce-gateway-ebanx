@@ -13,7 +13,7 @@ class WC_VPD_XML_Interest_Calculator {
 	 * @return float
 	 */
 	public static function calculate_total(WC_Order $order, $instalments) {
-		$order_total = 0;
+		$order_total = 0.0;
 
 		foreach ($order->get_items() as $key => $value) {
 			$product = new WC_Product($value['item_meta']['_product_id'][0]);
@@ -21,7 +21,8 @@ class WC_VPD_XML_Interest_Calculator {
 			$info = self::get_product_rates( $product->get_sku() );
 
 			if (!$info) {
-				return $product->get_display_price();
+				$order_total += $product->get_display_price() * $quantity;
+				continue;
 			}
 
 			$interest_rate = $instalments > 4
