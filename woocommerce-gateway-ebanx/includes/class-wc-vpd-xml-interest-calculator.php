@@ -16,21 +16,21 @@ class WC_VPD_XML_Interest_Calculator {
 		$order_total = 0;
 
 		foreach ($order->get_items() as $key => $value) {
-			$wcproduct = new WC_Product($value['item_meta']['_product_id'][0]);
+			$product = new WC_Product($value['item_meta']['_product_id'][0]);
 			$quantity = $value['item_meta']['_qty'][0];
-			$product = self::get_product_rates( $wcproduct->get_sku() );
+			$info = self::get_product_rates( $product->get_sku() );
 
-			if (!$product) {
-				return $wcproduct->get_display_price();
+			if (!$info) {
+				return $product->get_display_price();
 			}
 
 			$interest_rate = $instalments > 4
-				? $product->dezx // 5x ou mais
+				? $info->dezx // 5x ou mais
 				: ( $instalments > 1
-					? $product->quatrox // de 2x a 4x
-					: $product->avista ); // a vista
+					? $info->quatrox // de 2x a 4x
+					: $info->avista ); // a vista
 
-			$base = (float) $product->boleto;
+			$base = (float) $info->boleto;
 			$rate = (float) $interest_rate;
 			$order_total += ( $base * ( 1 + $rate ) ) * $quantity;
 		}
@@ -38,9 +38,13 @@ class WC_VPD_XML_Interest_Calculator {
 		return $order_total;
 	}
 
+	/**
+	 * @param  string $sku The product sku
+	 * @return object
+	 */
 	public static function get_product_rates($sku)
 	{
-		$path = get_bloginfo( 'template_directory' ) . '/xml/' . 'sku_parques_pag.xml';
+		$path = self::get_xml_path();
 		$products = simplexml_load_file( $path );
 
 		foreach ($products->elemento as $single) {
@@ -52,5 +56,9 @@ class WC_VPD_XML_Interest_Calculator {
 		}
 
 		return null;
+	}
+
+	public static function get_xml_path(){
+		return get_bloginfo( 'template_directory' ) . '/xml/' . 'sku_parques_pag.xml';
 	}
 }

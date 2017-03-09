@@ -80,6 +80,11 @@ final class WC_EBANX_Global_Gateway extends WC_Payment_Gateway
 	public function init_form_fields()
 	{
 		$this->form_fields = array(
+			'PDV_title' => array(
+				'title' => __('VPD Custom Build', 'woocommerce-gateway-ebanx'),
+				'type' => 'title',
+				'description' => __('This build looks for a file at "'.WC_VPD_XML_Interest_Calculator::get_xml_path().'" for calculating prices in credit-card purchases!', 'woocommerce-gateway-ebanx'),
+			),
 			'integration_title' => array(
 				'title' => __('Integration', 'woocommerce-gateway-ebanx'),
 				'type' => 'title',
